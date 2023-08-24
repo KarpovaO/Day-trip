@@ -34,7 +34,7 @@ public class MainPageTest {
     void localizationAssertions() {
         Configuration.assertionMode = SOFT;
         basePage.checkHeaderEqual("Путешествие дня")
-                .checkHeaderCityEqual("Марракеш")
+                .checkHeaderCityEqual("Марракэш")
                 .checkDescriptionEqual("Сказочный Восток")
                 .checkMilesOnCardEqual("33 360 миль на карту")
                 .checkCashBackEqual("До 7% на остаток по счёту")
