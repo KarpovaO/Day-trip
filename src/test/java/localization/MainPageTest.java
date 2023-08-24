@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import page.BasePage;
 
 import static com.codeborne.selenide.AssertionMode.SOFT;
+import static com.codeborne.selenide.AssertionMode.STRICT;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
@@ -78,12 +79,14 @@ public class MainPageTest {
                 .monthErrorCheck()
                 .yearErrorCheck()
                 .ownerErrorCheck();
-        Configuration.assertionMode = SOFT;
+        Configuration.assertionMode = STRICT;
     }
 
     @AfterEach
     void afterEach() {
+        Configuration.assertionMode = STRICT;
         closeWebDriver();
+
     }
 
 }
