@@ -57,7 +57,7 @@ public class MainPageTest {
     @DisplayName("Отправка данных, при которых банк одобрит операцию")
     @Test
     void checkSendPaymentFromCardAndAlert() {
-        PaymentForm.sendPaymentForm(BasePage::buyButtonClick, "4444444444444441", "08", "23", "SERGEY RUMYANOV", "333");
+        PaymentForm.sendPaymentForm(BasePage::buyButtonClick, "4444444444444441", "08", "24", "SERGEY RUMYANOV", "333");
         windowAlert.isVisibleAlert("Успешно");
     }
 
@@ -80,6 +80,14 @@ public class MainPageTest {
                 .yearErrorCheck()
                 .ownerErrorCheck();
         Configuration.assertionMode = STRICT;
+
+    }
+    @DisplayName("Проверка статуса отклонённого (DECLINED)")
+    @Test
+    void
+    operationNotApprovedByBankWithMessageSuccessful() {
+        PaymentForm.sendPaymentForm(BasePage::buyingCreditButtonClick, "4444444444444442", "08", "24", "SERGEY RUMYANOV", "333");
+        windowAlert.isVisibleAlert("Ошибка");
     }
 
     @AfterEach

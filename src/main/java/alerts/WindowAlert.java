@@ -1,6 +1,7 @@
 package alerts;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
@@ -10,12 +11,15 @@ public class WindowAlert {
 
     public  ElementsCollection alertElement() {
 
-        return $$(byClassContaining("notification_status"));
+        return $$(byClassContaining("notification__title"));
     }
 
-    public WindowAlert isVisibleAlert(String text) {
-         alertElement().findBy(visible).text().contains(text);
-         return this;
+    public void isVisibleAlert(String text) {
+        //boolean b = alertElement().findBy(visible).text().contains(text);
+        SelenideElement el = alertElement().findBy(visible);
+        String txt = el.text();
+        boolean b = txt.contains(text);
+        assert(b);
     }
 
 }

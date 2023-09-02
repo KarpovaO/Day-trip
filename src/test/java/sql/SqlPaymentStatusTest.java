@@ -13,6 +13,7 @@ import page.BasePage;
 import utils.sql.PostgresClient;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -64,12 +65,12 @@ public class SqlPaymentStatusTest {
      * @param status     - статус в БД
      */
     private void commonSteps(PaymentStatus status,  Boolean credit) {
-        LocalDateTime timeStart = LocalDateTime.now();
+        LocalDateTime timeStart = LocalDateTime.now(ZoneOffset.UTC);
         PaymentForm.sendPaymentForm(credit ? BasePage::buyingCreditButtonClick : BasePage::buyButtonClick,
-                status.getAccount(), "08", "23", "SERGEY RUMYANOV", "333");
+                status.getAccount(), "08", "24", "SERGEY RUMYANOV", "333");
         windowAlert.isVisibleAlert(status.getMsg());
         Selenide.sleep(1000);
-        LocalDateTime timeEnd = LocalDateTime.now();
+        LocalDateTime timeEnd = LocalDateTime.now(ZoneOffset.UTC);
         List<Map<String, Object>> maps = getRowFromPaymentEntityByTimeAndStatus(credit, timeStart, timeEnd, status.name());
 
         assertAll(
@@ -82,10 +83,13 @@ public class SqlPaymentStatusTest {
     private List<Map<String, Object>> getRowFromPaymentEntityByTimeAndStatus(Boolean credit, LocalDateTime timeStart, LocalDateTime timeEnd, String status) {
         String tableName = credit ? "credit_request_entity" : "payment_entity";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        return query.executeQuery(String.format("SELECT * FROM %s\n" +
+
+        String sql = String.format("SELECT * FROM %s\n" +
                 "WHERE created > to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
                 "AND created < to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
-                "AND status = '%s'", tableName, timeStart.format(formatter), timeEnd.format(formatter), status));
+                "AND status = '%s'", tableName, timeStart.format(formatter), timeEnd.format(formatter), status);
+
+        return query.executeQuery(sql);
     }
 
     @AfterEach

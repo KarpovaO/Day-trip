@@ -1,0 +1,9 @@
+FROM  node:18
+
+COPY gate-simulator ./gate-simulator
+
+WORKDIR ./gate-simulator
+
+EXPOSE 9999
+
+CMD ["npm", "start"]

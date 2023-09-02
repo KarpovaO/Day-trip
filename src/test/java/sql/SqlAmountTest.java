@@ -12,7 +12,10 @@ import page.BasePage;
 import utils.sql.PostgresClient;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static page.OpenPage.loginPage;
@@ -40,13 +43,13 @@ public class SqlAmountTest {
      * @param status - статус в БД
      */
     private void commonSteps(PaymentStatus status) {
-        LocalDateTime timeStart = LocalDateTime.now();
+        LocalDateTime timeStart = LocalDateTime.now(ZoneOffset.UTC);
         Integer price = basePage.getTripPrice();
         PaymentForm.sendPaymentForm(BasePage::buyButtonClick,
-                status.getAccount(), "08", "23", "SERGEY RUMYANOV", "333");
+                status.getAccount(), "08", "24", "SERGEY RUMYANOV", "333");
         windowAlert.isVisibleAlert(status.getMsg());
         Selenide.sleep(1000);
-        LocalDateTime timeEnd = LocalDateTime.now();
+        LocalDateTime timeEnd = LocalDateTime.now(ZoneOffset.UTC);
         Integer amount = getRowFromPaymentEntityByTimeAndStatus(timeStart, timeEnd, status.name());
 
         assertEquals(price, amount, "Стоимость путевки не соотвествует ожидаемой");
@@ -55,10 +58,12 @@ public class SqlAmountTest {
     @Step("Найти запись покупки по времени в интервале времени в статусе {status}")
     private Integer getRowFromPaymentEntityByTimeAndStatus(LocalDateTime timeStart, LocalDateTime timeEnd, String status) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        return Integer.parseInt(query.executeQuery(String.format("SELECT amount FROM payment_entity\n" +
-                        "WHERE created > to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
-                        "AND created < to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
-                        "AND status = '%s'", timeStart.format(formatter), timeEnd.format(formatter), status))
-                .get(0).get("amount").toString());
+
+        String sql = String.format("SELECT amount FROM payment_entity\n" +
+                "WHERE created > to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
+                "AND created < to_timestamp('%s', 'dd-mm-yyyy hh24:mi:ss')\n" +
+                "AND status = '%s'", timeStart.format(formatter), timeEnd.format(formatter), status);
+
+        return Integer.parseInt(query.executeQuery(sql).get(0).get("amount").toString());
     }
 }

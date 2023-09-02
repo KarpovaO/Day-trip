@@ -1,0 +1,10 @@
+FROM eclipse-temurin:17-jdk-jammy
+
+COPY aqa-shop.jar ./
+COPY application.properties ./
+
+EXPOSE 8080
+
+WORKDIR ./
+
+ENTRYPOINT java -jar aqa-shop.jar
