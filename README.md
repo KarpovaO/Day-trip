@@ -2,8 +2,8 @@
 ### 1. Построить докер контейнеры командой:
 <br>docker-compose build --no-cache
 ### 2. Запустить сервисы контейнера по очереди:
-<br> docker-compose up -d gatesimulator
 <br> docker-compose up -d postgres
+<br> docker-compose up -d gatesimulator
 <br> docker-compose up -d aqashop
 
 
