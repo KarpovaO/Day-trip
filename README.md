@@ -1,10 +1,23 @@
 # Day-trip
+Клонировать этот репозиторий себе локально
+### Открыть powershell
+перейти в папку prerequisite
 ### 1. Построить докер контейнеры командой:
 <br>docker-compose build --no-cache
 ### 2. Запустить сервисы контейнера по очереди:
 <br> docker-compose up -d postgres
 <br> docker-compose up -d gatesimulator
 <br> docker-compose up -d aqashop
+
+
+![image](https://github.com/KarpovaO/Day-trip/assets/88337282/cb37eb87-0895-48f5-bd26-202e500fd3ab)
+
+![image](https://github.com/KarpovaO/Day-trip/assets/88337282/58d5a56d-8ba5-42b3-93f7-a52550de0f4b)
+
+Открыть идею и запустить тесты командой test run
+### Выгрузить отчет allure:serve
+
+
 
 
  
